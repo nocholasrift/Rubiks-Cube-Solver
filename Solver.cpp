@@ -25,6 +25,7 @@ string Solver::solveStages(Cube cube){
 
 	//stage 1: White cross.
 	
+	//stage 2: First two layers.
 
 }
 
