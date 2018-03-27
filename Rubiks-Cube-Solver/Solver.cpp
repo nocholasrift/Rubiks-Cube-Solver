@@ -16,12 +16,34 @@ Solver::Solver(const Cube &cube){
 }
 
 string Solver::solveStages(Cube cube){
-	//base case, once a solved cube is found, terminate
 
+	//base case, once a solved cube is found, terminate
 	if(cube.isSolved()){
-		return true;
+		//Cube input is already solved!
+		return "";
 	}
 
 	//stage 1: White cross.
-	for()
+	
+
+}
+
+string Solver::whiteCross(Cube cube){
+	vector<Cube> states;
+	//initial state is parameter cube
+	states[0] = cube;
+
+	Cube curr(cube);
+
+	int q = 0;
+	bool isCross = false;
+
+	while(!isCross){
+
+		for(int i = -6; i < 7 && i != 0; i++){
+			
+		}
+
+	}
+
 }

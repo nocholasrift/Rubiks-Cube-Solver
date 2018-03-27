@@ -13,6 +13,9 @@ public:
 	//give a source Cube state to generate graph from.
 	Solver(const Cube &cube);
 	string solveStages(Cube cube);
+
+	string whiteCross(Cube cube);
+	bool isWhiteCross(Cube cube);
 private:
 	//adjecency list to represent cube space graph.
 	vector < list<Cube*> > cubeGraph;
