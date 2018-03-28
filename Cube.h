@@ -3,6 +3,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -25,6 +26,8 @@ public:
 	void downMove(bool isclockwise);
 	void frontMove(bool isClockwise);
 	void rotateFace(int face, bool isClockwise);
+
+	void applyMoves(const vector <int> &moves);
 
 	int cube[6][3][3];
 	string colors[6] = {"white", "blue", "orange", "yellow", "green", "red"}; 

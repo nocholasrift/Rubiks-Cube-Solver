@@ -11,11 +11,15 @@ class Solver{
 public:
 	Solver();
 	//give a source Cube state to generate graph from.
-	Solver(const Cube &cube);
-	string solveStages(Cube cube);
+	Solver(Cube &cube);
+	vector<int> solveStages(Cube &cube);
 
-	string whiteCross(Cube cube);
-	bool isWhiteCross(Cube cube);
+	vector<int> whiteCross(Cube &cube);
+
+	//not pass by reference because i dont want the original cube being passed in to be changed.
+	vector<Cube> whiteCross(vector<Cube> cubes);
+
+	bool isWhiteCross(Cube &c);
 private:
 	//adjecency list to represent cube space graph.
 	vector < list<Cube*> > cubeGraph;

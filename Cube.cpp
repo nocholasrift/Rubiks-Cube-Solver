@@ -569,3 +569,10 @@ void Cube::setCube(){
 	cout << "Current cube state -"<<endl;
 	printCube();
 }
+
+void Cube::applyMoves(const vector <int> &moves){
+	//go through integer vector and apply each move
+	for(int i = 0; i < moves.size(); i++){
+		turn(moves[i], 1);
+	}
+}
