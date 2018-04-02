@@ -28,12 +28,13 @@ public:
 	void rotateFace(int face, bool isClockwise);
 
 	void applyMoves(const vector <int> &moves);
-
+	void setMoves(string move);
 	int cube[6][3][3];
 	string colors[6] = {"white", "blue", "orange", "yellow", "green", "red"}; 
 	char color_char[6] = {'w', 'b', 'o', 'y', 'g', 'r'};
 	//this variable is for keeping track of what turn was used to get from previous vertex in graph to this current state.
 	int cost;
+	string moves;
 };
 
 #endif
