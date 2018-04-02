@@ -14,6 +14,7 @@ using namespace std;
 */
 
 Cube::Cube(){
+	moves = "";
 	for(int x = 0; x < 6; x++){
 
 		for(int y = 0; y < 3; y++){
@@ -59,6 +60,7 @@ Cube::Cube(){
 
 Cube::Cube(const Cube &source){
 
+	this->moves = source.moves;
 	//copy source cube array into this cube array. No need to copy anything else.
 	for(int x = 0; x < 6; x++){
 		for(int y = 0; y < 3; y++){
@@ -73,6 +75,7 @@ Cube::Cube(const Cube &source){
 Cube::Cube(const Cube &source, int cost){
 
 	//copy source cube array into this cube array. No need to copy anything else.
+	this->moves = source.moves;
 	for(int x = 0; x < 6; x++){
 		for(int y = 0; y < 3; y++){
 			for(int z = 0; z < 3; z++){
@@ -263,14 +266,14 @@ void Cube::rightMove(bool isClockwise){
 		cube[1][2][2] = tmpCube.cube[0][2][2];
 
 		//blue face pieces moving to yellow face pieces
-		cube[3][0][2] = tmpCube.cube[1][0][2];
-		cube[3][1][2] = tmpCube.cube[1][1][2];
-		cube[3][2][2] = tmpCube.cube[1][2][2];
+		cube[3][2][0] = tmpCube.cube[1][0][2];
+		cube[3][1][0] = tmpCube.cube[1][1][2];
+		cube[3][0][0] = tmpCube.cube[1][2][2];
 
 		//yellow face pieces moving to green face pieces
-		cube[4][0][2] = tmpCube.cube[3][0][2];
-		cube[4][1][2] = tmpCube.cube[3][1][2];
-		cube[4][2][2] = tmpCube.cube[3][2][2];
+		cube[4][2][2] = tmpCube.cube[3][0][0];
+		cube[4][1][2] = tmpCube.cube[3][1][0];
+		cube[4][0][2] = tmpCube.cube[3][2][0];
 
 		//green face pieces moving to white face pieces
 		cube[0][0][2] = tmpCube.cube[4][0][2];
@@ -279,7 +282,7 @@ void Cube::rightMove(bool isClockwise){
 	}
 
 	else{
-		//blue face pieces moving to yellow face pieces
+		//blue face pieces moving to white face pieces
 		cube[0][0][2] = tmpCube.cube[1][0][2];
 		cube[0][1][2] = tmpCube.cube[1][1][2];
 		cube[0][2][2] = tmpCube.cube[1][2][2];	
@@ -290,14 +293,14 @@ void Cube::rightMove(bool isClockwise){
 		cube[4][2][2] = tmpCube.cube[0][2][2];	
 
 		//green face pieces moving to yellow face pieces
-		cube[3][0][2] = tmpCube.cube[4][0][2];
-		cube[3][1][2] = tmpCube.cube[4][1][2];
-		cube[3][2][2] = tmpCube.cube[4][2][2];	
+		cube[3][2][0] = tmpCube.cube[4][0][2];
+		cube[3][1][0] = tmpCube.cube[4][1][2];
+		cube[3][0][0] = tmpCube.cube[4][2][2];	
 
 		//yellow face pieces moving to blue face pieces
-		cube[1][0][2] = tmpCube.cube[3][0][2];
-		cube[1][1][2] = tmpCube.cube[3][1][2];
-		cube[1][2][2] = tmpCube.cube[3][2][2];	
+		cube[1][2][2] = tmpCube.cube[3][0][0];
+		cube[1][1][2] = tmpCube.cube[3][1][0];
+		cube[1][0][2] = tmpCube.cube[3][2][0];	
 	}
 }
 
@@ -314,8 +317,8 @@ void Cube::backMove(bool isClockwise){
 
 		//blue face pieces moving to orange face pieces
 		cube[2][0][0] = tmpCube.cube[1][0][2];
-		cube[2][1][0] = tmpCube.cube[1][1][2];
-		cube[2][2][0] = tmpCube.cube[1][2][2];
+		cube[2][1][0] = tmpCube.cube[1][0][1];
+		cube[2][2][0] = tmpCube.cube[1][0][0];
 
 		//orange pieces moving to green face pieces
 		cube[4][2][0] = tmpCube.cube[2][0][0];
@@ -323,9 +326,9 @@ void Cube::backMove(bool isClockwise){
 		cube[4][2][2] = tmpCube.cube[2][2][0];
 
 		//green pieces moving to red face pieces
-		cube[5][0][2] = tmpCube.cube[4][0][2];
-		cube[5][1][2] = tmpCube.cube[4][1][2];
-		cube[5][2][2] = tmpCube.cube[4][2][2];
+		cube[5][0][2] = tmpCube.cube[4][2][2];
+		cube[5][1][2] = tmpCube.cube[4][2][1];
+		cube[5][2][2] = tmpCube.cube[4][2][0];
 	}
 
 	else{
@@ -335,19 +338,19 @@ void Cube::backMove(bool isClockwise){
 		cube[4][2][0] = tmpCube.cube[5][2][2];
 
 		//green face pieces moving to orange face pieces
-		cube[2][0][2] = tmpCube.cube[4][0][2];
-		cube[2][1][2] = tmpCube.cube[4][1][2];
-		cube[2][2][2] = tmpCube.cube[4][2][2];
+		cube[2][2][0] = tmpCube.cube[4][2][2];
+		cube[2][1][0] = tmpCube.cube[4][2][1];
+		cube[2][0][0] = tmpCube.cube[4][2][0];
 
 		//orange face pieces moving to blue face pieces
 		cube[1][0][2] = tmpCube.cube[2][0][0];
-		cube[1][0][1] = tmpCube.cube[2][0][1];
-		cube[1][0][0] = tmpCube.cube[2][0][2];
+		cube[1][0][1] = tmpCube.cube[2][1][0];
+		cube[1][0][0] = tmpCube.cube[2][2][0];
 
 		//blue face pieces moving to red face pieces
-		cube[5][0][2] = tmpCube.cube[1][0][2];
-		cube[5][1][2] = tmpCube.cube[1][1][2];
-		cube[5][2][2] = tmpCube.cube[1][2][2];
+		cube[5][0][2] = tmpCube.cube[1][0][0];
+		cube[5][1][2] = tmpCube.cube[1][0][1];
+		cube[5][2][2] = tmpCube.cube[1][0][2];
 	}
 }
 
@@ -368,14 +371,14 @@ void Cube::leftMove(bool isClockwise){
 		cube[4][2][0] = tmpCube.cube[0][2][0];
 
 		//green face pieces moving to yellow face pieces
-		cube[3][0][0] = tmpCube.cube[4][0][0];
-		cube[3][1][0] = tmpCube.cube[4][1][0];
-		cube[3][2][0] = tmpCube.cube[4][2][0];
+		cube[3][2][2] = tmpCube.cube[4][0][0];
+		cube[3][1][2] = tmpCube.cube[4][1][0];
+		cube[3][0][2] = tmpCube.cube[4][2][0];
 
 		//yellow face pieces moving to blue face pieces
-		cube[1][0][0] = tmpCube.cube[3][0][0];
-		cube[1][1][0] = tmpCube.cube[3][1][0];
-		cube[1][2][0] = tmpCube.cube[3][2][0];
+		cube[1][2][0] = tmpCube.cube[3][0][2];
+		cube[1][1][0] = tmpCube.cube[3][1][2];
+		cube[1][0][0] = tmpCube.cube[3][2][2];
 	}
 
 	else{
@@ -385,14 +388,14 @@ void Cube::leftMove(bool isClockwise){
 		cube[1][2][0] = tmpCube.cube[0][2][0];
 
 		//blue face pieces moving to yellow face pieces
-		cube[3][0][0] = tmpCube.cube[1][0][0];
-		cube[3][1][0] = tmpCube.cube[1][1][0];
-		cube[3][2][0] = tmpCube.cube[1][2][0];
+		cube[3][2][2] = tmpCube.cube[1][0][0];
+		cube[3][1][2] = tmpCube.cube[1][1][0];
+		cube[3][0][2] = tmpCube.cube[1][2][0];
 
 		//yellow face pieces moving to green face pieces
-		cube[4][0][0] = tmpCube.cube[3][0][0];
-		cube[4][1][0] = tmpCube.cube[3][1][0];
-		cube[4][2][0] = tmpCube.cube[3][2][0];
+		cube[4][2][0] = tmpCube.cube[3][0][2];
+		cube[4][1][0] = tmpCube.cube[3][1][2];
+		cube[4][0][0] = tmpCube.cube[3][2][2];
 
 		//green face pieces moving to white face pieces
 		cube[0][0][0] = tmpCube.cube[4][0][0];
@@ -458,9 +461,9 @@ void Cube::frontMove(bool isClockwise){
 
 	if(isClockwise){
 		//orange face pieces moving to blue face pieces
-		cube[1][2][0] = tmpCube.cube[2][0][2];
+		cube[1][2][0] = tmpCube.cube[2][2][2];
 		cube[1][2][1] = tmpCube.cube[2][1][2];
-		cube[1][2][2] = tmpCube.cube[2][2][2];
+		cube[1][2][2] = tmpCube.cube[2][0][2];
 
 		//blue face pieces moving to red face pieces
 		cube[5][0][0] = tmpCube.cube[1][2][0];
@@ -468,9 +471,9 @@ void Cube::frontMove(bool isClockwise){
 		cube[5][2][0] = tmpCube.cube[1][2][2];
 
 		//red pieces moving to green face pieces
-		cube[4][0][0] = tmpCube.cube[5][0][0];
+		cube[4][0][2] = tmpCube.cube[5][0][0];
 		cube[4][0][1] = tmpCube.cube[5][1][0];
-		cube[4][0][2] = tmpCube.cube[5][2][0];
+		cube[4][0][0] = tmpCube.cube[5][2][0];
 
 		//green pieces moving to orange face pieces
 		cube[2][0][2] = tmpCube.cube[4][0][0];
@@ -485,9 +488,9 @@ void Cube::frontMove(bool isClockwise){
 		cube[1][2][2] = tmpCube.cube[5][2][0];
 
 		//blue face pieces moving to orange face pieces
-		cube[2][0][2] = tmpCube.cube[1][2][0];
+		cube[2][2][2] = tmpCube.cube[1][2][0];
 		cube[2][1][2] = tmpCube.cube[1][2][1];
-		cube[2][2][2] = tmpCube.cube[1][2][2];
+		cube[2][0][2] = tmpCube.cube[1][2][2];
 
 		//orange pieces moving to green face pieces
 		cube[4][0][0] = tmpCube.cube[2][0][2];
@@ -495,9 +498,9 @@ void Cube::frontMove(bool isClockwise){
 		cube[4][0][2] = tmpCube.cube[2][2][2];
 
 		//green pieces moving to red face pieces
-		cube[5][0][0] = tmpCube.cube[4][0][0];
+		cube[5][2][0] = tmpCube.cube[4][0][0];
 		cube[5][1][0] = tmpCube.cube[4][0][1];
-		cube[5][2][0] = tmpCube.cube[4][0][2];
+		cube[5][0][0] = tmpCube.cube[4][0][2];
 	}
 }
 
@@ -531,7 +534,7 @@ void Cube::rotateFace(int face, bool isClockwise){
 		cube[face][0][1] = tmpCube.cube[face][1][2];
 		cube[face][1][2] = tmpCube.cube[face][2][1];
 		cube[face][2][1] = tmpCube.cube[face][1][0];
-		cube[face][1][0] = tmpCube.cube[face][0][0];
+		cube[face][1][0] = tmpCube.cube[face][0][1];
 	}
 }
 
@@ -575,4 +578,8 @@ void Cube::applyMoves(const vector <int> &moves){
 	for(int i = 0; i < moves.size(); i++){
 		turn(moves[i], 1);
 	}
+}
+
+void Cube::setMoves(string move){
+	moves += move;
 }
