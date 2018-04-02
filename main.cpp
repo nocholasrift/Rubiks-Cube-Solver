@@ -1,11 +1,13 @@
 #include "Cube.h"
+#include "Solver.h"
 #include <string>
 #include <iostream>
 #include <vector> 
+#include <unordered_map>
 
 using namespace std;
 
-vector<int> setMoves(string moves);
+vector<int> setMoves(string moves, unordered_map<string, int> &turns);
 
 int main(){
 	Cube *c = new Cube();
@@ -19,11 +21,17 @@ int main(){
 	cout << "An example input is: U R B F' R' U' F L' B2 F' L2 F R' F' D2 F' L' D U B F' R' U2 F' U";
 	cout << "------------------------------------------------------------------------------"<<endl;
 
-	cout << "Enter scramble string here: ";
-	string moves;
-	cin >> moves;
+	string moves = "";
+	string tmp;
 
-	string redo;
+	do{
+		cout << "Enter scramble here (Enter -1 when done): ";
+		cin >> tmp;
+		if(tmp != "-1")
+			moves += (tmp + " ");
+	}while(tmp != "-1");
+		
+		string redo;
 
 	do{
 		cout << moves << " ------ is this the move set you want to scramble your cube with (y/n)?  ";
@@ -32,93 +40,74 @@ int main(){
 		cin >> redo;
 
 		if(redo == "n"){
-			cout << "Enter scramble string here: ";
-			cin >> moves;
+			moves = "";
+			do{
+				cout << "Enter scramble here (Enter -1 when done): ";
+				cin >> tmp;
+				if(tmp != "-1")
+					moves += (tmp + " ");
+			} while(tmp != "-1");
 		}
 	} while(redo == "n");
 
+	unordered_map<string, int> turns;
+
+	//initialize turn map for user input.
+	turns["F"] = 3;
+	turns["U"] = 1;
+	turns["R"] = 2;
+	turns["D"] = 4;
+	turns["L"] = 5;
+	turns["B"] = 6;
+	turns["F'"] = -3;
+	turns["U'"] = -1;
+	turns["R'"] = -2;
+	turns["D'"] = -4;
+	turns["L'"] = -5;
+	turns["B'"] = -6;
+
 	cout <<endl<< "Scrambling cube now" << endl;
-	vector<int> moveSet = setMoves(moves);
-	
+	cout << moves << endl;
+	vector<int> moveSet = setMoves(moves, turns);
+
 	//scramble the cube, then print it out.
 	c->applyMoves(moveSet);
 
-	for(int i = 0; i < moveSet.size(); i++){
-		cout << moveSet[i]<< " " ;
-	}
-	/*cout << "Scrambled cube is: " << endl;
-	c->printCube();*/
+	cout << "Scrambled cube is: " << endl;
+	c->printCube();
 	cout << endl;
+
+	//intialize solver with scrambled cube
+	Solver solver(*c);
+
+	solver.solveStages();
+
+	return 0;
 }
 
 //function used to turn string moveset input into a vector of integer moves.
-vector<int> setMoves(string moves){
+vector<int> setMoves(string moves, unordered_map<string, int> &turns){
 	vector<int> moveSet;
-	for(int i = 0; i < moves.length()-1; i++){
-		//add front face turn.
-		if(moves.at(i) == 'F' && moves.at(i+1) == '\''){
-			moveSet.push_back(-3);
-			if(moves.at(i+1) == '2')
-				moveSet.push_back(-3);
-		}
-		if(moves.at(i) == 'F' && moves.at(i+1) == ' '){
-			moveSet.push_back(3);
-		}
-
-		//add back face turn.
-		if(moves.at(i) == 'B' && moves.at(i+1) == '\''){
-			moveSet.push_back(-6);
-			if(moves.at(i+1) == '2')
-				moveSet.push_back(-6);
-		}
-		if(moves.at(i) == 'B' && moves.at(i+1) == ' '){
-			moveSet.push_back(6);
-		}
-
-		//add top face turn.
-		if(moves.at(i) == 'U' && moves.at(i+1) == '\''){
-			moveSet.push_back(-1);
-			if(moves.at(i+1) == '2')
-				moveSet.push_back(-1);
-		}
-		if(moves.at(i) == 'U' && moves.at(i+1) == ' '){
-			moveSet.push_back(1);
-		}
-
-		//add down face turn.
-		if(moves.at(i) == 'D' && moves.at(i+1) == '\''){
-			moveSet.push_back(-4);
-			if(moves.at(i+1) == '2')
-				moveSet.push_back(-4);
-		}
-
-		if(moves.at(i) == 'D' && moves.at(i+1) == ' '){
-			moveSet.push_back(4);
-		}
-		//add right face turn.
-		if(moves.at(i) == (int)'R' && moves.at(i+1) == '\''){
-			moveSet.push_back(-2);
-			if(moves.at(i+1) == '2')
-				moveSet.push_back(-2);
-		}
-		if(moves.substr(i,1) == "R" /*&& moves.at(i+1) == ' '*/){
-			cout << "lololol" << endl;
-			moveSet.push_back(2);
-		}
-
-		//add left face turn.
-		if(moves.at(i) == 'L' && moves.at(i+1) == '\''){
-			moveSet.push_back(-5);
-			if(moves.at(i+1) == '2')
-				moveSet.push_back(-5);
-		}
-		if(moves.at(i) == 'L' && moves.at(i+1) == ' '){
-			moveSet.push_back(5);
-		}
-
-	}	
+	string tmp = "";
 	
-	cout << endl;
+	for(int i = 0; i < moves.length()-1; i++){
+		if(string(moves.substr(i,1)) != " " && string(moves.substr(i,1)) != "2" && string(moves.substr(i,1)) != "'"){
 
+			if(string(moves.substr(i+1,1)) == "'"){
+				tmp = moves.substr(i,1) + "'";
+				moveSet.push_back(turns[tmp]);
+			}
+
+			if(string(moves.substr(i+1,1)) == "2"){
+				moveSet.push_back(turns[moves.substr(i,1)]);
+				moveSet.push_back(turns[moves.substr(i,1)]);
+			}
+
+			if(string(moves.substr(i+1, 1)) == " "){
+				moveSet.push_back(turns[moves.substr(i,1)]);
+			}
+		}
+		
+	}	
 	return moveSet;
 }
